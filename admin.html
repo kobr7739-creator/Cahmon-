@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>لوحة المالك | شاموني</title>
+<link rel="icon" href="assets/logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0b0d10;--bg2:#12151a;--card:#14181e;--line:#232932;--tx:#f2efe9;--mut:#9aa1ab;--gold:#d4b06a;--gold2:#f1d9a0;--red:#c0392b;--green:#2ecc71}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-family:'Tajawal',sans-serif;min-height:100vh}
+button{font-family:inherit;cursor:pointer;border:0;color:inherit;background:none}
+input,select,textarea{font-family:inherit}
+.serif{font-family:'Cormorant Garamond',serif;letter-spacing:.12em}
+.f{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px 14px;color:var(--tx);font-size:15px;outline:none;margin-top:6px}
+.f:focus{border-color:var(--gold)}
+label{display:block;font-size:13px;color:var(--mut);margin-bottom:12px}
+.btn{padding:12px 24px;border-radius:12px;font-weight:700;font-size:15px;transition:.2s}
+.gold{background:linear-gradient(135deg,var(--gold2),var(--gold));color:#14110a}.gold:hover{filter:brightness(1.08)}
+.ghost{border:1px solid var(--line)}.ghost:hover{border-color:var(--gold)}
+.danger{background:rgba(192,57,43,.15);color:#ff7b6b}
+/* login */
+#login{min-height:100vh;display:grid;place-items:center;padding:20px;background:radial-gradient(circle at 50% 0,#1c2128,var(--bg) 60%)}
+.lb{width:min(400px,100%);background:var(--card);border:1px solid var(--line);border-radius:24px;padding:36px;text-align:center}
+.lb img{width:96px;height:96px;border-radius:50%;border:2px solid var(--gold);margin-bottom:14px}
+.lb h2{margin-bottom:4px}.lb p{color:var(--mut);font-size:14px;margin-bottom:22px}
+.err{color:#ff7b6b;font-size:14px;margin-top:10px;min-height:20px}
+/* app */
+#app{display:none}
+.top{display:flex;justify-content:space-between;align-items:center;padding:14px 22px;background:var(--bg2);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+.top .b{display:flex;align-items:center;gap:10px}.top img{width:38px;height:38px;border-radius:50%}
+.tabs{display:flex;gap:6px;padding:14px 22px;overflow:auto}
+.tab{padding:10px 22px;border-radius:30px;border:1px solid var(--line);color:var(--mut);white-space:nowrap}
+.tab.on{background:var(--gold);color:#111;border-color:var(--gold);font-weight:700}
+.main{padding:6px 22px 60px;max-width:1200px;margin:auto}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin:12px 0 22px}
+.st{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px}
+.st b{font-size:28px;color:var(--gold2);display:block}.st span{color:var(--mut);font-size:13px}
+.hd{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+table{width:100%;border-collapse:collapse;background:var(--card);border-radius:16px;overflow:hidden;font-size:14px}
+th,td{padding:12px 14px;text-align:right;border-bottom:1px solid var(--line)}
+th{background:var(--bg2);color:var(--mut);font-weight:500;font-size:13px}
+td img{width:48px;height:48px;border-radius:10px;object-fit:cover;background:#1b2027}
+.pill{padding:3px 12px;border-radius:20px;font-size:12px;background:rgba(212,176,106,.12);color:var(--gold2)}
+.pill.off{background:rgba(255,255,255,.07);color:var(--mut)}
+.scr{overflow-x:auto}
+.acts{display:flex;gap:6px}.acts button{padding:7px 14px;border-radius:8px;font-size:13px;border:1px solid var(--line)}
+.acts button:hover{border-color:var(--gold)}
+/* modal */
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);z-index:50;display:none;place-items:center;padding:14px}
+.ov.on{display:grid}
+.box{background:var(--bg2);border:1px solid var(--line);border-radius:22px;width:min(720px,100%);max-height:94vh;overflow:auto;padding:26px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+.chk{display:flex;gap:18px;margin:6px 0 14px;font-size:14px}.chk label{margin:0;display:flex;gap:6px;align-items:center;color:var(--tx)}
+.prev{width:110px;height:110px;border-radius:14px;background:var(--bg);border:1px dashed var(--line);object-fit:cover;display:block;margin:8px 0}
+.toast{position:fixed;bottom:24px;left:50%;transform:translate(-50%,120px);background:var(--gold);color:#111;padding:12px 26px;border-radius:40px;font-weight:700;z-index:99;transition:.4s}
+.toast.on{transform:translate(-50%,0)}
+.tip{background:rgba(212,176,106,.07);border:1px solid rgba(212,176,106,.25);border-radius:16px;padding:18px;margin-top:18px;line-height:1.9}
+.tip h4{color:var(--gold2);margin-bottom:6px}
+@media(max-width:640px){.g2{grid-template-columns:1fr}th:nth-child(n+4),td:nth-child(n+4){display:none}.acts{flex-direction:column}}
+</style>
+</head>
+<body>
+
+<div id="login">
+  <form class="lb" onsubmit="return doLogin(event)">
+    <img src="assets/logo.png" alt="">
+    <h2 class="serif">CHAMONI</h2>
+    <p>لوحة تحكم المالك</p>
+    <label style="text-align:right">اسم المستخدم<input class="f" id="u" autocomplete="username" required></label>
+    <label style="text-align:right">كلمة المرور<input class="f" id="pw" type="password" autocomplete="current-password" required></label>
+    <button class="btn gold" style="width:100%;margin-top:6px" id="lbtn">دخول</button>
+    <div class="err" id="err"></div>
+  </form>
+</div>
+
+<div id="app">
+  <div class="top"><div class="b"><img src="assets/logo.png" alt=""><b class="serif">CHAMONI</b><span style="color:var(--mut);font-size:13px">| لوحة المالك</span></div>
+    <div style="display:flex;gap:8px"><a class="btn ghost" href="index.html" target="_blank" style="text-decoration:none;color:inherit">عرض المتجر ↗</a><button class="btn ghost" onclick="logout()">خروج</button></div></div>
+  <div class="tabs">
+    <button class="tab on" data-t="prod">المنتجات</button><button class="tab" data-t="ord">الطلبات</button><button class="tab" data-t="set">الإعدادات</button><button class="tab" data-t="ideas">أفكار 💡</button>
+  </div>
+  <div class="main" id="view"></div>
+</div>
+
+<div class="ov" id="ov"><div class="box" id="box"></div></div>
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/config.js"></script>
+<script>
+const C=window.CHAMONI,$=id=>document.getElementById(id);
+const sb=supabase.createClient(C.SUPABASE_URL,C.SUPABASE_KEY);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=n=>Number(n||0).toLocaleString('en-US')+' '+C.CURRENCY;
+let P=[],O=[],S={},tab='prod';
+function toast(t){const e=$('toast');e.textContent=t;e.classList.add('on');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('on'),2400)}
+
+async function doLogin(e){
+  e.preventDefault();$('err').textContent='';$('lbtn').disabled=true;
+  const email=$('u').value.trim().toLowerCase()+'@'+C.OWNER_EMAIL_DOMAIN;
+  const {error}=await sb.auth.signInWithPassword({email,password:$('pw').value});
+  $('lbtn').disabled=false;
+  if(error){$('err').textContent='اسم المستخدم أو كلمة المرور غير صحيحة';return false}
+  start();return false;
+}
+async function logout(){await sb.auth.signOut();location.reload()}
+async function start(){$('login').style.display='none';$('app').style.display='block';await loadAll();show()}
+(async()=>{const {data}=await sb.auth.getSession();if(data.session)start()})();
+
+async function loadAll(){
+  const [a,b,c]=await Promise.all([sb.from('products').select('*').order('created_at',{ascending:false}),sb.from('orders').select('*').order('created_at',{ascending:false}),sb.from('settings').select('*')]);
+  P=a.data||[];O=b.data||[];S={};(c.data||[]).forEach(r=>S[r.key]=r.value);
+  if(a.error)toast('خطأ: '+a.error.message);
+}
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));t.classList.add('on');tab=t.dataset.t;show()});
+function show(){({prod:viewProd,ord:viewOrd,set:viewSet,ideas:viewIdeas})[tab]()}
+
+function viewProd(){
+  const rev=O.filter(o=>o.status!=='ملغي').reduce((a,o)=>a+(+o.total||0),0);
+  $('view').innerHTML=`<div class="stats">
+   <div class="st"><b>${P.length}</b><span>عدد المنتجات</span></div>
+   <div class="st"><b>${P.filter(p=>p.stock<=3).length}</b><span>مخزون منخفض</span></div>
+   <div class="st"><b>${O.length}</b><span>إجمالي الطلبات</span></div>
+   <div class="st"><b>${fmt(rev)}</b><span>إجمالي المبيعات</span></div></div>
+   <div class="hd"><h3>المنتجات</h3><div style="display:flex;gap:8px;flex:1;justify-content:flex-end"><input class="f" style="max-width:260px;margin:0" placeholder="بحث…" oninput="filt(this.value)"><button class="btn gold" onclick="edit()">+ إضافة منتج</button></div></div>
+   <div class="scr"><table><thead><tr><th>الصورة</th><th>الاسم</th><th>الفئة</th><th>السعر</th><th>المخزون</th><th>الحالة</th><th></th></tr></thead><tbody id="tb"></tbody></table></div>`;
+  rows(P);
+}
+function rows(l){
+  $('tb').innerHTML=l.length?l.map(p=>`<tr><td>${p.image_url?`<img src="${esc(p.image_url)}">`:'🧴'}</td>
+   <td><b>${esc(p.name)}</b><br><small style="color:var(--mut)">${esc(p.inspired_by)}</small></td><td>${esc(p.category)}</td>
+   <td>${p.sale_price?`<s style="color:var(--mut)">${fmt(p.price)}</s><br><b style="color:var(--gold2)">${fmt(p.sale_price)}</b>`:fmt(p.price)}</td>
+   <td>${p.stock}</td><td><span class="pill ${p.active?'':'off'}">${p.active?'ظاهر':'مخفي'}</span>${p.featured?' ⭐':''}</td>
+   <td><div class="acts"><button onclick="edit('${p.id}')">تعديل</button><button class="danger" onclick="delP('${p.id}')">حذف</button></div></td></tr>`).join(''):'<tr><td colspan="7" style="text-align:center;color:var(--mut);padding:30px">لا توجد منتجات</td></tr>';
+}
+function filt(v){v=v.toLowerCase();rows(P.filter(p=>(p.name+p.inspired_by+p.category).toLowerCase().includes(v)))}
+
+function edit(id){
+  const p=P.find(x=>x.id===id)||{name:'',inspired_by:'',category:'رجالي',description:'',notes_top:'',notes_heart:'',notes_base:'',price:'',sale_price:'',size_ml:100,stock:10,image_url:'',featured:false,active:true};
+  const v=(k)=>esc(p[k]??'');
+  $('box').innerHTML=`<h3 style="margin-bottom:16px">${id?'تعديل منتج':'إضافة منتج'}</h3>
+  <form onsubmit="return saveP(event,'${id||''}')">
+   <div class="g2"><label>اسم العطر *<input class="f" id="f_name" value="${v('name')}" required></label>
+   <label>مستوحى من (اختياري)<input class="f" id="f_inspired_by" value="${v('inspired_by')}"></label>
+   <label>الفئة<select class="f" id="f_category">${['رجالي','نسائي','للجنسين'].map(c=>`<option ${p.category===c?'selected':''}>${c}</option>`).join('')}</select></label>
+   <label>الحجم (مل)<input class="f" id="f_size_ml" type="number" value="${v('size_ml')}"></label>
+   <label>السعر *<input class="f" id="f_price" type="number" min="0" value="${v('price')}" required></label>
+   <label>سعر بعد الخصم (اتركه فارغاً بلا خصم)<input class="f" id="f_sale_price" type="number" min="0" value="${v('sale_price')}"></label>
+   <label>الكمية في المخزون<input class="f" id="f_stock" type="number" min="0" value="${v('stock')}"></label>
+   <label>رابط الصورة (أو ارفع صورة)<input class="f" id="f_image_url" value="${v('image_url')}"></label></div>
+   <label>رفع صورة من جهازك<input class="f" type="file" accept="image/*" id="file" onchange="up(this)"></label>
+   <img class="prev" id="prev" src="${v('image_url')}" onerror="this.style.visibility='hidden'" onload="this.style.visibility='visible'">
+   <label>الوصف<textarea class="f" id="f_description" rows="2">${v('description')}</textarea></label>
+   <div class="g2"><label>نوتات القمة<input class="f" id="f_notes_top" value="${v('notes_top')}"></label>
+   <label>نوتات القلب<input class="f" id="f_notes_heart" value="${v('notes_heart')}"></label></div>
+   <label>نوتات القاعدة<input class="f" id="f_notes_base" value="${v('notes_base')}"></label>
+   <div class="chk"><label><input type="checkbox" id="f_active" ${p.active?'checked':''}> ظاهر في المتجر</label><label><input type="checkbox" id="f_featured" ${p.featured?'checked':''}> منتج مميز ⭐</label></div>
+   <div style="display:flex;gap:10px"><button class="btn gold" id="sbtn">حفظ</button><button type="button" class="btn ghost" onclick="closeM()">إلغاء</button></div>
+  </form>`;
+  $('ov').classList.add('on');
+}
+function closeM(){$('ov').classList.remove('on')}
+async function up(inp){
+  const f=inp.files[0];if(!f)return;toast('جاري رفع الصورة…');
+  const name=Date.now()+'-'+Math.random().toString(36).slice(2,7)+'.'+f.name.split('.').pop();
+  const {error}=await sb.storage.from('product-images').upload(name,f,{cacheControl:'31536000'});
+  if(error)return toast('فشل الرفع: '+error.message);
+  const url=sb.storage.from('product-images').getPublicUrl(name).data.publicUrl;
+  $('f_image_url').value=url;$('prev').src=url;toast('تم رفع الصورة ✅');
+}
+async function saveP(e,id){
+  e.preventDefault();$('sbtn').disabled=true;
+  const g=k=>$('f_'+k).value.trim(),n=k=>g(k)===''?null:+g(k);
+  const row={name:g('name'),inspired_by:g('inspired_by'),category:g('category'),description:g('description'),notes_top:g('notes_top'),notes_heart:g('notes_heart'),notes_base:g('notes_base'),
+   price:n('price')||0,sale_price:n('sale_price'),size_ml:n('size_ml')||100,stock:n('stock')||0,image_url:g('image_url'),active:$('f_active').checked,featured:$('f_featured').checked};
+  const r=id?await sb.from('products').update(row).eq('id',id):await sb.from('products').insert(row);
+  $('sbtn').disabled=false;
+  if(r.error)return toast('خطأ: '+r.error.message);
+  closeM();toast('تم الحفظ ✅');await loadAll();show();
+}
+async function delP(id){
+  if(!confirm('هل أنت متأكد من حذف هذا المنتج نهائياً؟'))return;
+  const {error}=await sb.from('products').delete().eq('id',id);
+  if(error)return toast('خطأ: '+error.message);
+  toast('تم الحذف');await loadAll();show();
+}
+
+function viewOrd(){
+  $('view').innerHTML=`<div class="hd"><h3>الطلبات (${O.length})</h3></div><div class="scr"><table><thead><tr><th>التاريخ</th><th>الزبون</th><th>الهاتف</th><th>المحافظة</th><th>الطلب</th><th>الإجمالي</th><th>الحالة</th></tr></thead><tbody>`+
+  (O.length?O.map(o=>`<tr><td>${new Date(o.created_at).toLocaleDateString('ar-IQ')}</td><td>${esc(o.customer_name)}</td><td dir="ltr">${esc(o.phone)}</td><td>${esc(o.city)}<br><small style="color:var(--mut)">${esc(o.address)}</small></td>
+   <td>${(o.items||[]).map(i=>esc(i.name)+' ×'+i.qty).join('<br>')}</td><td>${fmt(o.total)}</td>
+   <td><select class="f" style="margin:0;padding:6px" onchange="setSt('${o.id}',this.value)">${['جديد','قيد التجهيز','تم التوصيل','ملغي'].map(s=>`<option ${o.status===s?'selected':''}>${s}</option>`).join('')}</select></td></tr>`).join(''):'<tr><td colspan="7" style="text-align:center;color:var(--mut);padding:30px">لا توجد طلبات بعد</td></tr>')+`</tbody></table></div>`;
+}
+async function setSt(id,s){const {error}=await sb.from('orders').update({status:s}).eq('id',id);toast(error?'خطأ':'تم التحديث ✅');await loadAll()}
+
+function viewSet(){
+  $('view').innerHTML=`<div class="hd"><h3>الإعدادات</h3></div><div class="st" style="max-width:520px">
+   <label>رقم واتساب (بصيغة دولية بدون +، مثال 9647701234567)<input class="f" id="s_whatsapp" value="${esc(S.whatsapp||'')}"></label>
+   <label>رسوم التوصيل (${C.CURRENCY})<input class="f" id="s_delivery_fee" type="number" value="${esc(S.delivery_fee||0)}"></label>
+   <label>شريط الإعلان أعلى المتجر<input class="f" id="s_announcement" value="${esc(S.announcement||'')}"></label>
+   <button class="btn gold" onclick="saveS()">حفظ الإعدادات</button></div>
+   <div class="st" style="max-width:520px;margin-top:16px"><b style="font-size:17px;color:var(--tx)">تغيير كلمة المرور</b>
+   <label style="margin-top:10px">كلمة مرور جديدة (8 أحرف فأكثر)<input class="f" id="npw" type="password"></label><button class="btn ghost" onclick="chPw()">تغيير</button></div>`;
+}
+async function saveS(){
+  const rows=['whatsapp','delivery_fee','announcement'].map(k=>({key:k,value:$('s_'+k).value.trim()}));
+  const {error}=await sb.from('settings').upsert(rows);toast(error?'خطأ: '+error.message:'تم الحفظ ✅');await loadAll();
+}
+async function chPw(){const p=$('npw').value;if(p.length<8)return toast('كلمة المرور قصيرة');const {error}=await sb.auth.updateUser({password:p});toast(error?'خطأ: '+error.message:'تم تغيير كلمة المرور ✅');$('npw').value=''}
+
+function viewIdeas(){
+  const L=[['🎁 أطقم الهدايا','اجمع عطرين أو ثلاثة بسعر خاص مع علبة هدية فاخرة، ممتاز للمناسبات والأعياد.'],
+  ['🧪 عينات (Discovery Set)','بيع عبوات صغيرة 10مل ليجرّب الزبون قبل شراء الحجم الكامل — ترفع المبيعات وتبني الثقة.'],
+  ['🎟 أكواد خصم','كود للعميل الأول أو لمتابعي الإنستغرام (مثل CHAMONI10) لزيادة التفاعل.'],
+  ['⭐ برنامج الولاء','نقطة لكل شراء، وعند 5 مشتريات يحصل الزبون على عطر صغير مجاني.'],
+  ['📸 محتوى Reels','فيديوهات قصيرة لفتح العلبة والرشّة الأولى؛ أقوى وسيلة تسويق للعطور على إنستغرام وتيك توك.'],
+  ['💬 تقييمات الزبائن','اطلب صوراً ورأي الزبائن بعد التوصيل وأضفها للمتجر لتعزيز المصداقية.'],
+  ['🔔 إشعار عند التوفر','سجّل رقم الزبون عند نفاد عطر وأبلغه حين يتوفر.'],
+  ['🗓 عروض موسمية','خصومات رمضان، عيد الحب، العيد، والجمعة البيضاء مع عدّاد تنازلي في المتجر.'],
+  ['🎯 توصية ذكية','مستشار العطور الموجود في المتجر يمكن توسيعه بأسئلة عن الموسم والمناسبة والميزانية.'],
+  ['🚚 التوصيل المجاني','فعّل توصيلاً مجانياً فوق مبلغ معيّن (مثلاً فوق 60,000) لرفع قيمة السلة.']];
+  $('view').innerHTML=`<div class="hd"><h3>أفكار لتنمية المتجر</h3></div>`+L.map(i=>`<div class="tip"><h4>${i[0]}</h4>${i[1]}</div>`).join('');
+}
+</script>
+</body>
+</html>
